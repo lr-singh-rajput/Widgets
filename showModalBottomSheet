@@ -1,0 +1,26 @@
+showModalBottomSheet
+
+
+showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,  // Scroll controlled so we can set height easily
+      builder: (BuildContext context) {
+        return Container(
+          padding: EdgeInsets.all(16),
+          height: 300,  // Height of the Bottom Sheet
+          color: Colors.white,
+          child: Column(
+            children: [
+              Text(
+                'This is a Bottom Sheet',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);  // Close the bottom sheet
+                },
+                child: Text('Close Bottom Sheet'),
+              ),
+            ],
+          ),
