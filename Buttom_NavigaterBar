@@ -1,0 +1,34 @@
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedItem = 0;
+  var _pages = [HomePage(), ReportPage(), SettingPage()];
+
+  @override
+  Widget build(BuildContext context) {
+    var h = MediaQuery.of(context).size.height;
+    var w = MediaQuery.of(context).size.width;
+
+
+    return Scaffold(
+      body: _pages[_selectedItem],
+
+      // bottom Navigation bar
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedItem,
+        selectedItemColor: Colors.orange,
+        type: BottomNavigationBarType.fixed,
+        onTap: (index) {
+          setState(() {
+            _selectedItem = index;
+          });
+          print("page number $_selectedItem");
+        },
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(icon: Icon(Icons.report), label: "Report"),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Setting"),
+        ],
+      ),
+    );
+  }
+}
