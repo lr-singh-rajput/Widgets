@@ -1,0 +1,96 @@
+#  Dialog_Box
+  ## 1 Custom Dialog_box
+  ## 2 Simple Dialog_box 
+  ## 3 Alert Dialog_box
+
+ElevatedButton(
+  onPressed: () {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15)),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("Custom Dialog", style: TextStyle(fontSize: 18)),
+                SizedBox(height: 10),
+                Text("Yeh ek custom design dialog hai."),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("Close"),
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  },
+  child: Text('Show Custom Dialog'),
+),
+
+
+##Simple Dialog_box 
+
+ElevatedButton(
+  onPressed: () {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Text('Select Option'),
+          children: [
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Option 1'),
+            ),
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Option 2'),
+            ),
+          ],
+        );
+      },
+    );
+  },
+  child: Text('Show SimpleDialog'),
+),
+
+
+
+
+  ## 3 Alert Dialog_box
+ElevatedButton(
+  onPressed: () {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Alert'),
+          content: Text('Yeh ek alert dialog hai.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  },
+  child: Text('Show AlertDialog'),
+),
+
