@@ -23,3 +23,13 @@
 | `bindings/*.dart` | Controller lazy loading ke liye        |
 | `Get.toNamed()`   | Navigate with arguments bhejna         |
 | `Get.arguments`   | Data receive karna next page me        |
+
+
+
+| Method                    | Purpose              | Use Case                         |
+| ------------------------- | -------------------- | -------------------------------- |
+| `Get.to()`                | Normal page open     | `Get.to(HomePage())`             |
+| `Get.toNamed('/profile')` | Named route          | `Get.toNamed(AppRoutes.profile)` |
+| `Get.off()`               | Replace current      | Login → Home                     |
+| `Get.offAll()`            | Remove all, open one | Splash → Home (after login)      |
+| `Get.back()`              | Go back              | Logout ya Cancel                 |
