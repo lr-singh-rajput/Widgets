@@ -269,7 +269,68 @@ class HomePage extends StatelessWidget {
 
 
 
+add notes page .Dart 
+import 'package:flutter/material.dart';
+import '../controllers/note_controller.dart';
+import '../models/note_model.dart';
 
+class AddNotePage extends StatefulWidget {
+  final Note? editNote;
+
+  AddNotePage({this.editNote});
+
+  @override
+  State<AddNotePage> createState() => _AddNotePageState();
+}
+
+class _AddNotePageState extends State<AddNotePage> {
+  final titleCtrl = TextEditingController();
+  final contentCtrl = TextEditingController();
+  final NoteController controller = NoteController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.editNote != null) {
+      titleCtrl.text = widget.editNote!.title;
+      contentCtrl.text = widget.editNote!.content;
+    }
+  }
+
+  void _saveNote() async {
+    if (widget.editNote == null) {
+      await controller.addNote(titleCtrl.text, contentCtrl.text);
+    } else {
+      final updatedNote = Note(
+        id: widget.editNote!.id,
+        title: titleCtrl.text,
+        content: contentCtrl.text,
+      );
+      await controller.updateNote(updatedNote);
+    }
+    Navigator.pop(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(widget.editNote != null ? 'Edit Note' : 'Add Note')),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            TextField(controller: titleCtrl, decoration: InputDecoration(labelText: 'Title')),
+            TextField(controller: contentCtrl, decoration: InputDecoration(labelText: 'Content')),
+            ElevatedButton(
+              onPressed: _saveNote,
+              child: Text(widget.editNote != null ? 'Update' : 'Save'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 
 
