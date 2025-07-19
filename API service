@@ -1,0 +1,43 @@
+
+ 1. api_service.dart
+📄 Path: lib/app/services/api_service.dart
+
+This helps centralize all HTTP requests so you don’t repeat code in each controller.
+
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+class ApiService {
+  static final _headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  };
+
+  static Future<dynamic> post(String url, Map<String, dynamic> body) async {
+    final response = await http.post(
+      Uri.parse(url),
+      headers: _headers,
+      body: jsonEncode(body),
+    );
+
+    return _handleResponse(response);
+  }
+
+  static Future<dynamic> get(String url) async {
+    final response = await http.get(
+      Uri.parse(url),
+      headers: _headers,
+    );
+
+    return _handleResponse(response);
+  }
+
+  static dynamic _handleResponse(http.Response response) {
+    final data = jsonDecode(response.body);
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      return data;
+    } else {
+      throw Exception(data['error'] ?? 'API Error');
+    }
+  }
+}
