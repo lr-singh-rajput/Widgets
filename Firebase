@@ -116,3 +116,160 @@ class LoginPage extends StatelessWidget {
 
 
 
+
+
+____&__&__________&&&___&___&&&&_______&______&&_₹₹₹_____&&______&
+
+lib/
+│
+├── models/
+│   └── note_model.dart
+│
+├── services/
+│   ├── auth_service.dart
+│   └── firestore_service.dart
+│
+├── controllers/
+│   └── note_controller.dart
+│
+├── pages/
+│   ├── login_page.dart
+│   ├── home_page.dart
+│   └── add_note_page.dart
+│
+└── main.dart
+
+
+
+firebase service.dart
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../models/note_model.dart';
+
+class FirestoreService {
+  final _notesRef = FirebaseFirestore.instance.collection('notes');
+
+  Future<void> addNote(Note note) async {
+    await _notesRef.add(note.toMap());
+  }
+
+  Stream<List<Note>> getNotes() {
+    return _notesRef.snapshots().map((snapshot) {
+      return snapshot.docs
+          .map((doc) => Note.fromMap(doc.data(), doc.id))
+          .toList();
+    });
+  }
+
+  Future<void> updateNote(Note note) async {
+    await _notesRef.doc(note.id).update(note.toMap());
+  }
+
+  Future<void> deleteNote(String id) async {
+    await _notesRef.doc(id).delete();
+  }
+}
+
+
+
+notes controller.dart
+import '../models/note_model.dart';
+import '../services/firestore_service.dart';
+
+class NoteController {
+  final FirestoreService _service = FirestoreService();
+
+  Stream<List<Note>> get notes => _service.getNotes();
+
+  Future<void> addNote(String title, String content) async {
+    final note = Note(id: '', title: title, content: content);
+    await _service.addNote(note);
+  }
+
+  Future<void> updateNote(Note note) async {
+    await _service.updateNote(note);
+  }
+
+  Future<void> deleteNote(String id) async {
+    await _service.deleteNote(id);
+  }
+}
+
+
+
+Home page.dart
+
+import 'package:flutter/material.dart';
+import '../controllers/note_controller.dart';
+import '../models/note_model.dart';
+import 'add_note_page.dart';
+
+class HomePage extends StatelessWidget {
+  final NoteController controller = NoteController();
+
+  void _editNote(BuildContext context, Note note) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => AddNotePage(editNote: note),
+      ),
+    );
+  }
+
+  void _deleteNote(BuildContext context, String id) async {
+    await controller.deleteNote(id);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Note deleted')));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('My Notes')),
+      body: StreamBuilder<List<Note>>(
+        stream: controller.notes,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return CircularProgressIndicator();
+          final notes = snapshot.data!;
+          return ListView.builder(
+            itemCount: notes.length,
+            itemBuilder: (context, index) {
+              final note = notes[index];
+              return ListTile(
+                title: Text(note.title),
+                subtitle: Text(note.content),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.edit, color: Colors.orange),
+                      onPressed: () => _editNote(context, note),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.delete, color: Colors.red),
+                      onPressed: () => _deleteNote(context, note.id),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => AddNotePage()),
+        ),
+        child: Icon(Icons.add),
+      ),
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
