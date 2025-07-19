@@ -2,6 +2,31 @@ Bahut accha sawal hai! Chaliye **bindings**, **routes**, aur **utils/constants.d
 
 ---
 
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'routes/app_pages.dart';
+import 'routes/app_routes.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      initialRoute: AppRoutes.SPLASH,
+      getPages: AppPages.pages,  // yahan poori routing list lagti hai
+    );
+  }
+}
+
+
+
+
+
 ### 🔹 **1. `InitialBindings` – Dependency Injection (DI) via GetX**
 
 #### 📌 Code:
@@ -127,3 +152,123 @@ Batao, agla step kya chahiye?
 ✅ Firebase add karna hai?
 ✅ Ya full login logic with REST API/Firebase?
 ✅ Ya state management ka ek real feature demo?
+
+
+
+
+
+
+import 'package:get/get.dart';
+import '../pages/auth/login_page.dart';
+import '../pages/auth/register_page.dart';
+import '../pages/auth/splash_screen.dart';
+import '../pages/home/home_page.dart';
+import '../pages/profile/profile_page.dart';
+import '../pages/profile/update_profile_page.dart';
+
+class AppRoutes {
+  static const SPLASH = '/';
+  static const LOGIN = '/login';
+  static const REGISTER = '/register';
+  static const HOME = '/home';
+  static const PROFILE = '/profile';
+  static const UPDATE_PROFILE = '/update-profile';
+
+  static final routes = [
+    GetPage(name: SPLASH, page: () => SplashScreen()),
+    GetPage(name: LOGIN, page: () => LoginPage()),
+    GetPage(name: REGISTER, page: () => RegisterPage()),
+    GetPage(name: HOME, page: () => HomePage()),
+    GetPage(name: PROFILE, page: () => ProfilePage()),
+    GetPage(name: UPDATE_PROFILE, page: () => UpdateProfilePage()),
+  ];
+}
+
+
+
+
+
+
+
+
+
+
+class AppRoutes {
+  static const SPLASH = '/';
+  static const LOGIN = '/login';
+  static const REGISTER = '/register';
+  static const HOME = '/home';
+  static const PROFILE = '/profile';
+  static const UPDATE_PROFILE = '/update-profile';
+}
+
+import 'package:get/get.dart';
+
+// Import your pages
+import '../pages/auth/login_page.dart';
+import '../pages/auth/register_page.dart';
+import '../pages/auth/splash_screen.dart';
+import '../pages/home/home_page.dart';
+import '../pages/profile/profile_page.dart';
+import '../pages/profile/update_profile_page.dart';
+
+// Import bindings
+import '../bindings/auth_binding.dart';
+import '../bindings/home_binding.dart';
+import '../bindings/profile_binding.dart';
+
+import 'app_routes.dart';
+
+class AppPages {
+  static final pages = [
+    GetPage(
+      name: AppRoutes.SPLASH,
+      page: () => SplashScreen(),
+      // Splash screen me dependency kam hoti hai mostly
+    ),
+
+    GetPage(
+      name: AppRoutes.LOGIN,
+      page: () => LoginPage(),
+      binding: AuthBinding(),
+    ),
+
+    GetPage(
+      name: AppRoutes.REGISTER,
+      page: () => RegisterPage(),
+      binding: AuthBinding(),
+    ),
+
+    GetPage(
+      name: AppRoutes.HOME,
+      page: () => HomePage(),
+      binding: HomeBinding(),
+    ),
+
+    GetPage(
+      name: AppRoutes.PROFILE,
+      page: () => ProfilePage(),
+      binding: ProfileBinding(),
+    ),
+
+    GetPage(
+      name: AppRoutes.UPDATE_PROFILE,
+      page: () => UpdateProfilePage(),
+      binding: ProfileBinding(),
+    ),
+  ];
+}
+
+
+
+
+import 'package:get/get.dart';
+import '../controllers/auth_controller.dart';
+
+class AuthBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<AuthController>(() => AuthController());
+  }
+}
+
